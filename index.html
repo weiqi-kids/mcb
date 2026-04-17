@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MASTER Biotics™ — 互動網站系列</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  background:#1a1a3e;
+  color:#fff;
+  font-family:-apple-system,'Microsoft JhengHei','PingFang TC',system-ui,sans-serif;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  padding:32px 16px;
+}
+.container{
+  width:100%;
+  max-width:900px;
+}
+h1{
+  color:#d4a843;
+  font-size:36px;
+  text-align:center;
+  margin-bottom:8px;
+}
+.subtitle{
+  color:#ccccdd;
+  text-align:center;
+  font-size:16px;
+  margin-bottom:40px;
+}
+.section-label{
+  grid-column:1/-1;
+  color:#d4a843;
+  font-size:18px;
+  font-weight:700;
+  padding-bottom:8px;
+  border-bottom:1px solid rgba(212,168,67,0.4);
+  margin-top:8px;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+}
+.card{
+  background:rgba(45,27,105,0.6);
+  border-radius:12px;
+  padding:24px;
+  text-decoration:none;
+  color:#fff;
+  transition:all 0.3s;
+  border:1px solid rgba(107,92,231,0.3);
+  display:block;
+}
+.card:hover{
+  transform:translateY(-4px);
+  border-color:#d4a843;
+  background:rgba(45,27,105,0.8);
+}
+.card h3{color:#d4a843;margin-bottom:8px;}
+.card p{color:#ccccdd;font-size:14px;line-height:1.5;}
+.style-tag{
+  display:inline-block;
+  background:rgba(107,92,231,0.3);
+  padding:2px 8px;
+  border-radius:4px;
+  font-size:12px;
+  margin-bottom:8px;
+}
+@media(max-width:680px){
+  .grid{grid-template-columns:1fr;}
+  h1{font-size:28px;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>MASTER Biotics™</h1>
+  <p class="subtitle">日本億菌大師 — 互動網站系列</p>
+
+  <div class="grid">
+    <!-- B2C Section -->
+    <div class="section-label">B2C 消費者版</div>
+
+    <a class="card" href="b2c-a.html">
+      <span class="style-tag">Scrollytelling</span>
+      <h3>滾動敘事版</h3>
+      <p>全屏滾動動畫，一步步帶入芽孢益生菌的世界</p>
+    </a>
+
+    <a class="card" href="b2c-b.html">
+      <span class="style-tag">Dashboard</span>
+      <h3>儀表板版</h3>
+      <p>互動面板，快速瀏覽功效與臨床數據</p>
+    </a>
+
+    <a class="card" href="b2c-c.html">
+      <span class="style-tag">Showcase</span>
+      <h3>產品展示版</h3>
+      <p>視覺衝擊力強，消化道旅程動畫</p>
+    </a>
+
+    <!-- B2B Section -->
+    <div class="section-label">B2B 專業版</div>
+
+    <a class="card" href="b2b-a.html">
+      <span class="style-tag">Scrollytelling</span>
+      <h3>滾動敘事版</h3>
+      <p>從市場洞察到科學驗證的完整故事線</p>
+    </a>
+
+    <a class="card" href="b2b-b.html">
+      <span class="style-tag">Dashboard</span>
+      <h3>儀表板版</h3>
+      <p>左側導航，快速切換菌株、實驗、臨床、配方數據</p>
+    </a>
+
+    <a class="card" href="b2b-c.html">
+      <span class="style-tag">Showcase</span>
+      <h3>產品展示版</h3>
+      <p>高端品牌感，圖表輪播與數據亮點</p>
+    </a>
+  </div>
+</div>
+</body>
+</html>
