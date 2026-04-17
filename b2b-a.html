@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MASTERBiotics™ 日本億菌大師 — B2B 專業介紹</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, 'Microsoft JhengHei', 'PingFang TC', system-ui, sans-serif;
+  background: #1a1a3e; color: #fff; line-height: 1.7; overflow-x: hidden;
+}
+
+/* ── Global Section ── */
+section {
+  min-height: 100vh; padding: 80px 24px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+section:nth-child(even) { background: #2d1b69; }
+section:nth-child(odd)  { background: #1a1a3e; }
+
+.section-inner { max-width: 1100px; width: 100%; }
+
+h2 {
+  font-size: clamp(1.6rem, 4vw, 2.4rem); text-align: center;
+  margin-bottom: 12px; color: #d4a843;
+}
+h3 {
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem); text-align: center;
+  margin-bottom: 24px; color: #ccccdd; font-weight: 400;
+}
+.subtitle {
+  text-align: center; font-size: 1.05rem; color: #ccccdd;
+  margin-bottom: 36px; max-width: 720px; margin-left: auto; margin-right: auto;
+}
+
+/* ── Fade-in animation ── */
+.anim-target { opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; }
+.anim-target.visible { opacity: 1; transform: translateY(0); }
+
+/* ── Chart containers ── */
+.chart-box {
+  background: rgba(255,255,255,.06); border-radius: 14px; padding: 24px 16px;
+  margin: 0 auto 32px; max-width: 700px; width: 100%;
+}
+.chart-box svg { width: 100%; height: auto; display: block; overflow: visible; }
+
+/* ── Spec cards ── */
+.card-row { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; margin: 32px 0; }
+.spec-card {
+  flex: 1 1 300px; max-width: 480px; background: rgba(255,255,255,.08);
+  border: 1px solid rgba(212,168,67,.35); border-radius: 14px; padding: 28px 24px;
+  text-align: center;
+}
+.spec-card h4 { color: #d4a843; font-size: 1.15rem; margin-bottom: 8px; }
+.spec-card .big-num { font-size: 2.2rem; font-weight: 700; color: #fff; margin: 8px 0; }
+.spec-card .sub { color: #ccccdd; font-size: .95rem; }
+
+/* ── Station (science sections) ── */
+.station { padding: 60px 0; }
+.station-title {
+  font-size: clamp(1.15rem, 2.5vw, 1.4rem); color: #d4a843;
+  text-align: center; margin-bottom: 20px; font-weight: 600;
+}
+.conclusion {
+  text-align: center; margin-top: 18px; color: #fff;
+  font-size: 1.05rem; padding: 12px 20px; border-left: 3px solid #d4a843;
+  background: rgba(212,168,67,.1); border-radius: 0 8px 8px 0;
+  max-width: 700px; margin-left: auto; margin-right: auto;
+}
+
+/* ── 2x2 grid ── */
+.grid-2x2 {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+  max-width: 900px; margin: 0 auto;
+}
+.grid-2x2 .chart-box { margin-bottom: 0; max-width: none; }
+@media (max-width: 640px) { .grid-2x2 { grid-template-columns: 1fr; } }
+
+/* ── Side-by-side charts ── */
+.side-by-side {
+  display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; max-width: 900px; margin: 0 auto;
+}
+.side-by-side .chart-box { flex: 1 1 380px; max-width: 440px; margin-bottom: 0; }
+
+/* ── Dropdowns ── */
+.dropdown-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
+.dropdown-row label { color: #ccccdd; font-size: .95rem; }
+.dropdown-row select {
+  background: #2d1b69; color: #fff; border: 1px solid #6b5ce7;
+  border-radius: 8px; padding: 8px 14px; font-size: 1rem; cursor: pointer;
+  font-family: inherit;
+}
+
+/* ── Comparison table ── */
+.table-wrap { overflow-x: auto; margin: 32px auto; max-width: 1000px; }
+.cmp-table {
+  width: 100%; border-collapse: collapse; font-size: .92rem;
+  background: rgba(255,255,255,.05); border-radius: 10px; overflow: hidden;
+}
+.cmp-table th, .cmp-table td { padding: 14px 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,.1); }
+.cmp-table th { background: rgba(212,168,67,.15); color: #d4a843; font-weight: 600; }
+.cmp-table td:first-child { text-align: left; font-weight: 600; color: #ccccdd; white-space: nowrap; }
+.cmp-table tr:hover td { background: rgba(212,168,67,.08); }
+.cmp-table .highlight { background: rgba(212,168,67,.12); }
+.cmp-table th.highlight { background: rgba(212,168,67,.3); }
+
+/* ── Formula grid ── */
+.formula-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  max-width: 900px; margin: 40px auto 0;
+}
+.formula-card {
+  background: rgba(255,255,255,.07); border-radius: 12px; padding: 22px 16px;
+  text-align: center; border: 1px solid rgba(255,255,255,.1);
+  transition: border-color .3s;
+}
+.formula-card:hover { border-color: #d4a843; }
+.formula-icon { font-size: 2rem; margin-bottom: 8px; }
+.formula-card h4 { color: #d4a843; font-size: 1rem; margin-bottom: 6px; }
+.formula-card p { color: #ccccdd; font-size: .85rem; line-height: 1.5; }
+@media (max-width: 640px) { .formula-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 420px) { .formula-grid { grid-template-columns: 1fr; } }
+
+/* ── Cert badges ── */
+.cert-row { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin: 28px 0; }
+.cert-badge {
+  background: rgba(255,255,255,.1); border-radius: 10px; padding: 14px 22px;
+  font-size: .9rem; font-weight: 600; color: #d4a843; border: 1px solid rgba(212,168,67,.3);
+}
+
+/* ── Note ── */
+.note { text-align: center; color: #ccccdd; font-size: .9rem; margin-top: 16px; }
+
+/* ── Insight text ── */
+.insight-text {
+  background: rgba(255,255,255,.06); border-radius: 10px; padding: 18px 22px;
+  max-width: 700px; margin: 20px auto 0; color: #ccccdd; font-size: .95rem; line-height: 1.7;
+}
+
+/* ── Tooltip ── */
+.d3-tooltip {
+  position: absolute; pointer-events: none; background: rgba(0,0,0,.85);
+  color: #fff; padding: 6px 12px; border-radius: 6px; font-size: .82rem;
+  white-space: nowrap; opacity: 0; transition: opacity .2s;
+}
+
+/* ── About section ── */
+.about-center { text-align: center; max-width: 700px; margin: 0 auto; }
+.about-center p { color: #ccccdd; font-size: 1rem; margin-bottom: 12px; }
+.about-center a { color: #d4a843; text-decoration: none; }
+.about-center a:hover { text-decoration: underline; }
+
+/* ── Axis text ── */
+svg text { font-family: -apple-system, 'Microsoft JhengHei', 'PingFang TC', system-ui, sans-serif; }
+</style>
+</head>
+<body>
+
+<!-- Tooltip -->
+<div class="d3-tooltip" id="tooltip"></div>
+
+<!-- ============================== Section 1 — 市場洞察 ============================== -->
+<section id="sec-market">
+  <div class="section-inner anim-target">
+    <h2>市場洞察</h2>
+    <h3>消費者所關注益生菌的特點</h3>
+    <div class="chart-box" id="chart-survey"></div>
+    <p class="subtitle">消費者更重視活菌數，因為活菌數與機能發揮劃上等號</p>
+  </div>
+</section>
+
+<!-- ============================== Section 2 — 產品定位 ============================== -->
+<section id="sec-product">
+  <div class="section-inner anim-target">
+    <h2>產品定位</h2>
+    <h3>日本億菌大師 (芽孢益生菌)</h3>
+    <p class="subtitle">超高菌數 + 極致穩定 = 完全制霸益生菌市場</p>
+    <div class="card-row">
+      <div class="spec-card">
+        <h4>凝結芽孢桿菌 DSM 35067</h4>
+        <div class="big-num">500億<span style="font-size:.6em;color:#ccccdd"> 菌數/克</span></div>
+        <div class="sub">5×10¹⁰ CFU/g，另有150億規格</div>
+      </div>
+      <div class="spec-card">
+        <h4>納豆芽孢桿菌 DSM 35068</h4>
+        <div class="big-num">2000億<span style="font-size:.6em;color:#ccccdd"> 菌數/克</span></div>
+        <div class="sub">2×10¹¹ CFU/g</div>
+      </div>
+    </div>
+    <p class="note">經德國DSMZ菌庫認證，來源正宗</p>
+  </div>
+</section>
+
+<!-- ============================== Section 3 — 科學驗證故事線 ============================== -->
+<section id="sec-science" style="padding-top:60px;padding-bottom:60px;">
+  <div class="section-inner">
+    <h2>科學驗證故事線</h2>
+
+    <!-- Station 1 -->
+    <div class="station anim-target" id="station1">
+      <div class="station-title">Station 1 — 胃酸、膽鹽耐受性實驗</div>
+      <div class="chart-box" id="chart-acidbile"></div>
+      <p class="conclusion">經3小時胃酸及膽鹽處理後菌數無明顯下降</p>
+    </div>
+
+    <!-- Station 2 -->
+    <div class="station anim-target" id="station2">
+      <div class="station-title">Station 2 — 腸道定殖力測試</div>
+      <div class="chart-box" id="chart-colon"></div>
+      <p class="conclusion">與BrilliaNest™燕窩酸結合後，腸道定殖率大幅提升</p>
+    </div>
+
+    <!-- Station 3 -->
+    <div class="station anim-target" id="station3">
+      <div class="station-title">Station 3 — 免疫三重功效</div>
+      <div class="grid-2x2">
+        <div class="chart-box" id="chart-ifnb"></div>
+        <div class="chart-box" id="chart-ifng"></div>
+        <div class="chart-box" id="chart-tgfb"></div>
+        <div class="chart-box" id="chart-il4"></div>
+      </div>
+      <p class="conclusion" style="margin-top:24px;">BC與BS優於傳統益生菌LA嗜酸乳桿菌、BL比菲德氏菌</p>
+    </div>
+
+    <!-- Station 4 -->
+    <div class="station anim-target" id="station4">
+      <div class="station-title">Station 4 — GLP-1激活</div>
+      <div class="chart-box" id="chart-glp1"></div>
+      <p class="conclusion">芽孢型態激活GLP-1比生長型好，也比市售益生菌好</p>
+    </div>
+
+    <!-- Station 5 -->
+    <div class="station anim-target" id="station5">
+      <div class="station-title">Station 5 — 多巴胺激活</div>
+      <div class="chart-box" id="chart-dopamine"></div>
+      <p class="conclusion">菌株裂解物的多巴胺刺激能力優於無性及孢子型態</p>
+    </div>
+
+    <!-- Station 6 -->
+    <div class="station anim-target" id="station6">
+      <div class="station-title">Station 6 — 抗氧化酵素</div>
+      <div class="side-by-side">
+        <div class="chart-box" id="chart-catalase"></div>
+        <div class="chart-box" id="chart-sod"></div>
+      </div>
+      <p class="conclusion" style="margin-top:24px;">億菌大師菌株展現優異的抗氧化酵素活性</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== Section 4 — 臨床試驗 ============================== -->
+<section id="sec-clinical">
+  <div class="section-inner anim-target">
+    <h2>臨床試驗</h2>
+    <h3>蛋白質吸收利用與排出的臨床試驗</h3>
+    <p class="subtitle">150人隨機雙盲，9組 (A–I)，3種蛋白質</p>
+
+    <div class="dropdown-row">
+      <div>
+        <label for="sel-protein">蛋白質類型：</label>
+        <select id="sel-protein">
+          <option value="whey">乳清蛋白</option>
+          <option value="pea">碗豆蛋白</option>
+          <option value="col">膠原蛋白</option>
+        </select>
+      </div>
+      <div>
+        <label for="sel-condition">條件：</label>
+        <select id="sel-condition">
+          <option value="control">對照</option>
+          <option value="bc">凝結芽孢桿菌</option>
+          <option value="bs">納豆芽孢桿菌</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="chart-box" id="chart-bristol" style="max-width:780px;"></div>
+    <div class="insight-text" id="insight-tn"></div>
+  </div>
+</section>
+
+<!-- ============================== Section 5 — 市場優勢 ============================== -->
+<section id="sec-advantage">
+  <div class="section-inner anim-target">
+    <h2>市場優勢</h2>
+
+    <div class="table-wrap">
+      <table class="cmp-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="highlight">MASTER Biotics™</th>
+            <th>B.coagulans</th>
+            <th>B.subtilis</th>
+            <th>乳酸菌/雙歧桿菌</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>原料規格</td>
+            <td class="highlight">B.Coagulans 500億 / B.Subtilis 2000億</td>
+            <td>150億</td>
+            <td>1000億</td>
+            <td>100-200億</td>
+          </tr>
+          <tr>
+            <td>儲存條件</td>
+            <td class="highlight">無需冷藏與冷鏈運輸</td>
+            <td>無需冷藏</td>
+            <td>無需冷藏</td>
+            <td>不能超過28°C</td>
+          </tr>
+          <tr>
+            <td>應用範圍</td>
+            <td class="highlight">保健食品+烘焙糖果</td>
+            <td>補充劑+烘焙糖果</td>
+            <td>補充劑+烘焙糖果</td>
+            <td>膠囊粉劑</td>
+          </tr>
+          <tr>
+            <td>健康功能</td>
+            <td class="highlight">腸道、免疫、體重管理多重功能</td>
+            <td>視供應商</td>
+            <td>視供應商</td>
+            <td>視供應商</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:48px;">推薦配方方向</h3>
+    <div class="formula-grid">
+      <div class="formula-card">
+        <div class="formula-icon">⚖️</div>
+        <h4>體重控制</h4>
+        <p>芽孢益生菌 + 綠茶萃取 + 藤黃果</p>
+      </div>
+      <div class="formula-card">
+        <div class="formula-icon">🛡️</div>
+        <h4>提升免疫</h4>
+        <p>芽孢益生菌 + 接骨木莓 + 維生素C</p>
+      </div>
+      <div class="formula-card">
+        <div class="formula-icon">💪</div>
+        <h4>蛋白增肌</h4>
+        <p>芽孢益生菌 + 乳清蛋白 + BCAA</p>
+      </div>
+      <div class="formula-card">
+        <div class="formula-icon">🧠</div>
+        <h4>情緒穩定</h4>
+        <p>芽孢益生菌 + GABA + 色胺酸</p>
+      </div>
+      <div class="formula-card">
+        <div class="formula-icon">🫶</div>
+        <h4>促進消化</h4>
+        <p>芽孢益生菌 + 消化酵素 + 薑黃</p>
+      </div>
+      <div class="formula-card">
+        <div class="formula-icon">🔥</div>
+        <h4>降低發炎</h4>
+        <p>芽孢益生菌 + 魚油Omega-3 + 薑黃素</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== Section 6 — 關於 MCB ============================== -->
+<section id="sec-about">
+  <div class="section-inner anim-target">
+    <h2>關於 MCB</h2>
+    <div class="about-center">
+      <h3>亞太區具有歷史指標的粉體原料製造大廠</h3>
+      <p>1987年成立於台灣，超過30年歷史，專注於粉體原料的研發與製造。</p>
+      <div class="cert-row">
+        <div class="cert-badge">FSSC 22000</div>
+        <div class="cert-badge">HACCP</div>
+        <div class="cert-badge">ISO 22000</div>
+        <div class="cert-badge">FDA</div>
+        <div class="cert-badge">Halal</div>
+      </div>
+      <p style="margin-top:20px;"><a href="https://www.mingchyi.com" target="_blank">www.mingchyi.com</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== JavaScript ============================== -->
+<script>
+(function () {
+  'use strict';
+
+  /* ── Tooltip helper ── */
+  const tip = d3.select('#tooltip');
+  function showTip(evt, html) {
+    tip.html(html).style('opacity', 1)
+       .style('left', (evt.pageX + 12) + 'px')
+       .style('top', (evt.pageY - 28) + 'px');
+  }
+  function hideTip() { tip.style('opacity', 0); }
+
+  /* ── Responsive dimension helper ── */
+  function dims(container, ratio) {
+    const w = container.node().getBoundingClientRect().width - 32;
+    return { w: w, h: w * (ratio || 0.55) };
+  }
+
+  /* ── Margins ── */
+  const M = { top: 30, right: 20, bottom: 50, left: 60 };
+
+  /* ==========================================================================
+     Section 1 — Survey bar chart
+     ========================================================================== */
+  function drawSurvey(animate) {
+    const container = d3.select('#chart-survey');
+    container.selectAll('svg').remove();
+    const data = [
+      { factor: '活菌數', value: 70 },
+      { factor: '功能性', value: 15 },
+      { factor: '品牌', value: 10 }
+    ];
+    const d = dims(container, 0.45);
+    const svg = container.append('svg')
+      .attr('viewBox', `0 0 ${d.w} ${d.h}`);
+    const g = svg.append('g').attr('transform', `translate(${M.left},${M.top})`);
+    const iw = d.w - M.left - M.right, ih = d.h - M.top - M.bottom;
+
+    const x = d3.scaleBand().domain(data.map(d => d.factor)).range([0, iw]).padding(0.4);
+    const y = d3.scaleLinear().domain([0, 80]).range([ih, 0]);
+
+    g.append('g').attr('transform', `translate(0,${ih})`).call(d3.axisBottom(x))
+      .selectAll('text').attr('fill', '#ccccdd').style('font-size', '13px');
+    g.append('g').call(d3.axisLeft(y).ticks(5).tickFormat(d => d + '%'))
+      .selectAll('text').attr('fill', '#ccccdd');
+    g.selectAll('.domain, .tick line').attr('stroke', '#555');
+
+    const bars = g.selectAll('.bar').data(data).enter().append('rect')
+      .attr('x', d => x(d.factor)).attr('width', x.bandwidth())
+      .attr('fill', '#3a86c8').attr('rx', 4)
+      .on('mouseover', (e, d) => showTip(e, `${d.factor}: ${d.value}%`))
+      .on('mouseout', hideTip);
+
+    if (animate) {
+      bars.attr('y', ih).attr('height', 0)
+        .transition().duration(800).delay((d, i) => i * 150)
+        .attr('y', d => y(d.value)).attr('height', d => ih - y(d.value));
+    } else {
+      bars.attr('y', d => y(d.value)).attr('height', d => ih - y(d.value));
+    }
+
+    // value labels
+    g.selectAll('.val').data(data).enter().append('text')
+      .attr('x', d => x(d.factor) + x.bandwidth() / 2)
+      .attr('text-anchor', 'middle').attr('fill', '#fff').style('font-size', '13px')
+      .attr('y', d => animate ? ih : y(d.value) - 6)
+      .text(d => d.value + '%')
+      .transition().duration(800).delay((d, i) => i * 150)
+      .attr('y', d => y(d.value) - 6);
+  }
+
+  /* ==========================================================================
+     Station 1 — Acid/Bile line chart
+     ========================================================================== */
+  function drawAcidBile(animate) {
+    const container = d3.select('#chart-acidbile');
+    container.selectAll('svg').remove();
+    const acidBileBS = [{time:'0h',value:100},{time:'1.5h',value:101},{time:'3h',value:102},{time:'4.5h',value:103},{time:'6h',value:104}];
+    const acidBileBC = [{time:'0h',value:100},{time:'1.5h',value:100},{time:'3h',value:100},{time:'4.5h',value:101},{time:'6h',value:102}];
+    const times = acidBileBS.map(d => d.time);
+    const d = dims(container, 0.5);
+    const svg = container.append('svg').attr('viewBox', `0 0 ${d.w} ${d.h}`);
+    const g = svg.append('g').attr('transform', `translate(${M.left},${M.top})`);
+    const iw = d.w - M.left - M.right, ih = d.h - M.top - M.bottom;
+
+    const x = d3.scalePoint().domain(times).range([0, iw]).padding(0.5);
+    const y = d3.scaleLinear().domain([50, 110]).range([ih, 0]);
+
+    g.append('g').attr('transform', `translate(0,${ih})`).call(d3.axisBottom(x))
+      .selectAll('text').attr('fill', '#ccccdd').style('font-size', '12px');
+    g.append('g').call(d3.axisLeft(y).ticks(7).tickFormat(d => d + '%'))
+      .selectAll('text').attr('fill', '#ccccdd');
+    g.selectAll('.domain, .tick line').attr('stroke', '#555');
+
+    // Y-axis label
+    g.append('text').attr('transform', 'rotate(-90)').attr('x', -ih / 2).attr('y', -44)
+      .attr('text-anchor', 'middle').attr('fill', '#ccccdd').style('font-size', '12px')
+      .text('存活率 (%)');
+
+    const lineGen = d3.line().x(d => x(d.time)).y(d => y(d.value)).curve(d3.curveMonotoneX);
+
+    // Draw lines
+    function drawLine(data, color, label) {
+      const path = g.append('path').datum(data)
+        .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 2.5)
+        .attr('d', lineGen);
+      if (animate) {
+        const len = path.node().getTotalLength();
+        path.attr('stroke-dasharray', len).attr('stroke-dashoffset', len)
+          .transition().duration(1200).attr('stroke-dashoffset', 0);
+      }
+      g.selectAll(`.dot-${label}`).data(data).enter().append('circle')
+        .attr('cx', d => x(d.time)).attr('cy', d => y(d.value))
+        .attr('r', 4).attr('fill', color).attr('stroke', '#fff').attr('stroke-width', 1)
+        .on('mouseover', (e, d) => showTip(e, `${label} ${d.time}: ${d.value}%`))
+        .on('mouseout', hideTip);
+    }
+
+    drawLine(acidBileBS, '#6b5ce7', 'DSM35068');
+    drawLine(acidBileBC, '#d4a843', 'DSM35067');
+
+    // Legend
+    const leg = g.append('g').attr('transform', `translate(${iw - 200}, 0)`);
+    [{c:'#d4a843',l:'DSM35067 (BC)'},{c:'#6b5ce7',l:'DSM35068 (BS)'}].forEach((it,i) => {
+      leg.append('rect').attr('x',0).attr('y',i*20).attr('width',14).attr('height',14).attr('rx',3).attr('fill',it.c);
+      leg.append('text').attr('x',20).attr('y',i*20+12).text(it.l).attr('fill','#ccccdd').style('font-size','12px');
+    });
+  }
+
+  /* ==========================================================================
+     Station 2 — Colon grouped bar chart
+     ========================================================================== */
+  function drawColon(animate) {
+    const container = d3.select('#chart-colon');
+    container.selectAll('svg').remove();
+    const colonData = [
+      {strain:'凝結芽孢桿菌\nDSM35067',control:5,treated:18},
+      {strain:'納豆芽孢桿菌\nDSM35068',control:7.5,treated:21},
+      {strain:'嗜酸乳桿菌',control:5,treated:14},
+      {strain:'雷特式B菌',control:6,treated:17}
+    ];
+    const d = dims(container, 0.55);
+    const svg = container.append('svg').attr('viewBox', `0 0 ${d.w} ${d.h}`);
+    const mg = { top: 30, right: 20, bottom: 65, left: 70 };
+    const g = svg.append('g').attr('transform', `translate(${mg.left},${mg.top})`);
+    const iw = d.w - mg.left - mg.right, ih = d.h - mg.top - mg.bottom;
+
+    const x0 = d3.scaleBand().domain(colonData.map(d => d.strain)).range([0, iw]).padding(0.25);
+    const x1 = d3.scaleBand().domain(['control','treated']).range([0, x0.bandwidth()]).padding(0.1);
+    const y = d3.scaleLinear().domain([0, 25]).range([ih, 0]);
+
+    // X axis with multiline labels
+    const xAxis = g.append('g').attr('transform', `translate(0,${ih})`).call(d3.axisBottom(x0).tickSize(0));
+    xAxis.selectAll('text').remove();
+    xAxis.selectAll('.label').data(colonData).enter().append('text')
+      .attr('x', d => x0(d.strain) + x0.bandwidth() / 2)
+      .attr('y', 14).attr('text-anchor', 'middle').attr('fill', '#ccccdd').style('font-size', '11px')
+      .each(function(d) {
+        const parts = d.strain.split('\n');
+        const el = d3.select(this);
+        el.text('');
+        parts.forEach((p, i) => {
+          el.append('tspan').attr('x', x0(d.strain) + x0.bandwidth() / 2)
+            .attr('dy', i === 0 ? 0 : '1.2em').text(p);
+        });
+      });
+
+    g.append('g').call(d3.axisLeft(y).ticks(5))
+      .selectAll('text').attr('fill', '#ccccdd');
+    g.selectAll('.domain, .tick line').attr('stroke', '#555');
+
+    g.append('text').attr('transform', 'rotate(-90)').attr('x', -ih / 2).attr('y', -50)
+      .attr('text-anchor', 'middle').attr('fill', '#ccccdd').style('font-size', '12px')
+      .text('益生菌黏附力 (%)');
+
+    const groups = ['control', 'treated'];
+    const colors = { control: '#6b5ce7', treated: '#3a86c8' };
+    const labels = { control: '對照', treated: '添加燕窩酸' };
+
+    colonData.forEach(cd => {
+      groups.forEach(key => {
+        const bar = g.append('rect')
+          .attr('x', x0(cd.strain) + x1(key))
+          .attr('width', x1.bandwidth())
+          .attr('fill', colors[key]).attr('rx', 3)
+          .on('mouseover', e => showTip(e, `${labels[key]}: ${cd[key]}%`))
+          .on('mouseout', hideTip);
+        if (animate) {
+          bar.attr('y', ih).attr('height', 0)
+            .transition().duration(700).delay(key === 'treated' ? 200 : 0)
+            .attr('y', y(cd[key])).attr('height', ih - y(cd[key]));
+        } else {
+          bar.attr('y', y(cd[key])).attr('height', ih - y(cd[key]));
+        }
+      });
+    });
+
+    // Legend
+    const leg = g.append('g').attr('transform', `translate(${iw - 180}, 0)`);
+    [{ c: '#6b5ce7', l: '對照' }, { c: '#3a86c8', l: '添加燕窩酸' }].forEach((it, i) => {
+      leg.append('rect').attr('x', 0).attr('y', i * 20).attr('width', 14).attr('height', 14).attr('rx', 3).attr('fill', it.c);
+      leg.append('text').attr('x', 20).attr('y', i * 20 + 12).text(it.l).attr('fill', '#ccccdd').style('font-size', '12px');
+    });
+  }
+
+  /* ==========================================================================
+     Station 3 — Immune 2×2 bar charts
+     ========================================================================== */
+  function drawImmuneChart(containerId, title, data, yLabel, yMax, animate) {
+    const container = d3.select('#' + containerId);
+    container.selectAll('svg').remove();
+    // Add chart title
+    container.selectAll('.chart-title').remove();
+    container.insert('div', ':first-child').attr('class', 'chart-title')
+      .style('text-align', 'center').style('color', '#d4a843').style('font-size', '14px')
+      .style('font-weight', '600').style('margin-bottom', '8px').text(title);
+
+    const mcbGroups = ['BC', 'BS'];
+    const d = dims(container, 0.65);
+    const mg = { top: 20, right: 10, bottom: 50, left: 50 };
+    const svg = container.append('svg').attr('viewBox', `0 0 ${d.w} ${d.h}`);
+    const g = svg.append('g').attr('transform', `translate(${mg.left},${mg.top})`);
+    const iw = d.w - mg.left - mg.right, ih = d.h - mg.top - mg.bottom;
+
+    const x = d3.scaleBand().domain(data.map(d => d.group)).range([0, iw]).padding(0.3);
+    const y = d3.scaleLinear().domain([0, yMax]).range([ih, 0]);
+
+    g.append('g').attr('transform', `translate(0,${ih})`).call(d3.axisBottom(x).tickSize(0))
+      .selectAll('text').attr('fill', '#ccccdd').style('font-size', '10px')
+      .attr('transform', 'rotate(-25)').attr('text-anchor', 'end');
+    g.append('g').call(d3.axisLeft(y).ticks(4))
+      .selectAll('text').attr('fill', '#ccccdd').style('font-size', '10px');
+    g.selectAll('.domain, .tick line').attr('stroke', '#555');
+
+    g.append('text').attr('transform', 'rotate(-90)').attr('x', -ih / 2).attr('y', -36)
+      .attr('text-anchor', 'middle').attr('fill', '#ccccdd').style('font-size', '10px')
+      .text(yLabel);
+
+    const bars = g.selectAll('.bar').data(data).enter().append('rect')
+      .attr('x', d => x(d.group)).attr('width', x.bandwidth())
+      .attr('fill', d => mcbGroups.includes(d.group) ? '#d4a843' : '#3a86c8')
+      .attr('rx', 3)
+      .on('mouseover', (e, d) => showTip(e, `${d.group}: ${d.value} ${yLabel}`))
+      .on('mouseout', hideTip);
+
+    if (animate) {
+      bars.attr('y', ih).attr('height', 0)
+        .transition().duration(600).delay((d, i) => i * 80)
+        .attr('y', d => y(d.value)).attr('height', d => ih - y(d.value));
+    } else {
+      bars.attr('y', d => y(d.value)).attr('height', d => ih - y(d.value));
+    }
+  }
+
+  function drawImmune(animate) {
+    drawImmuneChart('chart-ifnb', 'IFN-β', [
+      {group:'Control',value:130},{group:'BC',value:140},{group:'BS',value:135},{group:'LA',value:130},{group:'BL',value:125}
+    ], 'pg/ml', 160, animate);
+
+    drawImmuneChart('chart-ifng', 'IFN-γ', [
+      {group:'Control',value:100},{group:'BC',value:500},{group:'BS',value:480},{group:'LA',value:450},{group:'BL',value:420}
+    ], 'pg/ml', 550, animate);
+
+    drawImmuneChart('chart-tgfb', 'TGF-β', [
+      {group:'Control',value:100},{group:'Pathogen',value:120},{group:'BC',value:200},{group:'BS',value:190},{group:'LA',value:160},{group:'BL',value:150}
+    ], 'pg/ml', 220, animate);
+
+    drawImmuneChart('chart-il4', 'IL-4', [
+      {group:'Control',value:100},{group:'Allergen',value:210},{group:'BC',value:120},{group:'BS',value:110},{group:'LA',value:150},{group:'BL',value:140}
+    ], 'pg/ml', 240, animate);
+  }
+
+  /* ==========================================================================
+     Station 4 — GLP-1
+     ========================================================================== */
+  function drawGLP1(animate) {
+    const container = d3.select('#chart-glp1');
+    container.selectAll('svg').remove();
+    const data = [
+      {group:'Control',value:100},{group:'BC-V',value:480},{group:'BC-S',value:450},
+      {group:'BS-V',value:500},{group:'BS-S',value:470},{group:'LA',value:250},{group:'BL',value:240}
+    ];
+    const mcbGroups = ['BC-V','BC-S','BS-V','BS-S'];
+    const tradGroups = ['LA','BL'];
+
+    const d = dims(container, 0.5);
+    const svg = container.append('svg').attr('viewBox', `0 0 ${d.w} ${d.h}`);
+    const g = svg.append('g').attr('transform', `translate(${M.left},${M.top})`);
+    const iw = d.w - M.left - M.right, ih = d.h - M.top - M.bottom;
+
+    const x = d3.scaleBand().domain(data.map(d => d.group)).range([0, iw]).padding(0.3);
+    const y = d3.scaleLinear().domain([0, 550]).range([ih, 0]);
+
+    g.append('g').attr('transform', `translate(0,${ih})`).call(d3.axisBottom(x).tickSize(0))
+      .selectAll('text').attr('fill', '#ccccdd').style('font-size', '11px');
+    g.append('g').call(d3.axisLeft(y).ticks(6))
+      .selectAll('text').attr('fill', '#ccccdd');
+    g.selectAll('.domain, .tick line').attr('stroke', '#555');
+
+    g.append('text').attr('transform', 'rotate(-90)').attr('x', -ih / 2).attr('y', -44)
+      .attr('text-anchor', 'middle').attr('fill', '#ccccdd').style('font-size', '12px')
+      .text('GLP-1 (pg/ml)');
+
+    const bars = g.selectAll('.bar').data(data).enter().append('rect')
+      .attr('x', d => x(d.group)).attr('width', x.bandwidth())
+      .attr('fill', d => {
+        if (mcbGroups.includes(d.group)) return '#3a86c8';
+        if (tradGroups.includes(d.group)) return '#6b5ce7';
+        return '#888';
+      }).attr('rx', 3)
+      .on('mouseover', (e, d) => showTip(e, `${d.group}: ${d.value} pg/ml`))
+      .on('mouseout', hideTip);
+
+    if (animate) {
+      bars.attr('y', ih).attr('height', 0)
+        .transition().duration(700).delay((d, i) => i * 80)
+        .attr('y', d => y(d.value)).attr('height', d => ih - y(d.value));
+    } else {
+      bars.attr('y', d => y(d.value)).attr('height', d => ih - y(d.value));
+    }
+
+    // Legend
+    const leg = g.append('g').attr('transform', `translate(${iw - 220}, 0)`);
+    [{c:'#3a86c8',l:'MCB芽孢菌株'},{c:'#6b5ce7',l:'傳統益生菌'},{c:'#888',l:'Control'}].forEach((it,i) => {
+      leg.append('rect').attr('x',0).attr('y',i*20).attr('width',14).attr('height',14).attr('rx',3).attr('fill',it.c);
+      leg.append('text').attr('x',20).attr('y',i*20+12).text(it.l).attr('fill','#ccccdd').style('font-size','12px');
+    });
+  }
+
+  /* ==========================================================================
+     Station 5 — Dopamine
+     ========================================================================== */
+  function drawDopamine(animate) {
+    const container = d3.select('#chart-dopamine');
+    container.selectAll('svg').remove();
+    const data = [
+      {group:'Control',value:20},{group:'BC-V',value:130},{group:'BC-S',value:130},
+      {group:'BC-L',value:230},{group:'BS-V',value:130},{group:'BS-S',value:130},{group:'BS-L',value:230}
+    ];
+    const lysate = ['BC-L','BS-L'];
+
+    const d = dims(container, 0.5);
+    const svg = container.append('svg').attr('viewBox', `0 0 ${d.w} ${d.h}`);
+    const g = svg.append('g').attr('transform', `translate(${M.left},${M.top})`);
+    const iw = d.w - M.left - M.right, ih = d.h - M.top - M.bottom;
+
+    const x = d3.scaleBand().domain(data.map(d => d.group)).range([0, iw]).padding(0.3);
+    const y = d3.scaleLinear().domain([0, 260]).range([ih, 0]);
+
+    g.append('g').attr('transform', `translate(0,${ih})`).call(d3.axisBottom(x).tickSize(0))
+      .selectAll('text').attr('fill', '#ccccdd').style('font-size', '11px');
+    g.append('g').call(d3.axisLeft(y).ticks(6))
+      .selectAll('text').attr('fill', '#ccccdd');
+    g.selectAll('.domain, .tick line').attr('stroke', '#555');
+
+    g.append('text').attr('transform', 'rotate(-90)').attr('x', -ih / 2).attr('y', -44)
+      .attr('text-anchor', 'middle').attr('fill', '#ccccdd').style('font-size', '12px')
+      .text('Dopamine (pg/ml)');
+
+    const bars = g.selectAll('.bar').data(data).enter().append('rect')
+      .attr('x', d => x(d.group)).attr('width', x.bandwidth())
+      .attr('fill', d => {
+        if (lysate.includes(d.group)) return '#d4a843';
+        if (d.group === 'Control') return '#888';
+        return '#3a86c8';
+      }).attr('rx', 3)
+      .on('mouseover', (e, d) => showTip(e, `${d.group}: ${d.value} pg/ml`))
+      .on('mouseout', hideTip);
+
+    if (animate) {
+      bars.attr('y', ih).attr('height', 0)
+        .transition().duration(700).delay((d, i) => i * 80)
+        .attr('y', d => y(d.value)).attr('height', d => ih - y(d.value));
+    } else {
+      bars.attr('y', d => y(d.value)).attr('height', d => ih - y(d.value));
+    }
+
+    // Legend
+    const leg = g.append('g').attr('transform', `translate(${iw - 180}, 0)`);
+    [{c:'#d4a843',l:'裂解物 (Lysate)'},{c:'#3a86c8',l:'芽孢/營養態'},{c:'#888',l:'Control'}].forEach((it,i) => {
+      leg.append('rect').attr('x',0).attr('y',i*20).attr('width',14).attr('height',14).attr('rx',3).attr('fill',it.c);
+      leg.append('text').attr('x',20).attr('y',i*20+12).text(it.l).attr('fill','#ccccdd').style('font-size','12px');
+    });
+  }
+
+  /* ==========================================================================
+     Station 6 — Antioxidant enzymes (Catalase + SOD)
+     ========================================================================== */
+  function drawEnzyme(containerId, title, data, yMax, animate) {
+    const container = d3.select('#' + containerId);
+    container.selectAll('svg').remove();
+    container.selectAll('.chart-title').remove();
+    container.insert('div', ':first-child').attr('class', 'chart-title')
+      .style('text-align', 'center').style('color', '#d4a843').style('font-size', '14px')
+      .style('font-weight', '600').style('margin-bottom', '8px').text(title);
+
+    const mcbNames = ['億菌大師DSM35067', '億菌大師DSM35068'];
+
+    const d = dims(container, 0.7);
+    const mg = { top: 20, right: 10, bottom: 80, left: 55 };
+    const svg = container.append('svg').attr('viewBox', `0 0 ${d.w} ${d.h}`);
+    const g = svg.append('g').attr('transform', `translate(${mg.left},${mg.top})`);
+    const iw = d.w - mg.left - mg.right, ih = d.h - mg.top - mg.bottom;
+
+    const x = d3.scaleBand().domain(data.map(d => d.name)).range([0, iw]).padding(0.25);
+    const y = d3.scaleLinear().domain([0, yMax]).range([ih, 0]);
+
+    g.append('g').attr('transform', `translate(0,${ih})`).call(d3.axisBottom(x).tickSize(0))
+      .selectAll('text').attr('fill', '#ccccdd').style('font-size', '9px')
+      .attr('transform', 'rotate(-35)').attr('text-anchor', 'end');
+    g.append('g').call(d3.axisLeft(y).ticks(5))
+      .selectAll('text').attr('fill', '#ccccdd').style('font-size', '10px');
+    g.selectAll('.domain, .tick line').attr('stroke', '#555');
+
+    g.append('text').attr('transform', 'rotate(-90)').attr('x', -ih / 2).attr('y', -40)
+      .attr('text-anchor', 'middle').attr('fill', '#ccccdd').style('font-size', '11px')
+      .text('U/mL');
+
+    const bars = g.selectAll('.bar').data(data).enter().append('rect')
+      .attr('x', d => x(d.name)).attr('width', x.bandwidth())
+      .attr('fill', d => mcbNames.includes(d.name) ? '#d4a843' : '#6b5ce7')
+      .attr('rx', 3)
+      .on('mouseover', (e, d) => showTip(e, `${d.name}: ${d.value} U/mL`))
+      .on('mouseout', hideTip);
+
+    if (animate) {
+      bars.attr('y', ih).attr('height', 0)
+        .transition().duration(600).delay((d, i) => i * 80)
+        .attr('y', d => y(d.value)).attr('height', d => ih - y(d.value));
+    } else {
+      bars.attr('y', d => y(d.value)).attr('height', d => ih - y(d.value));
+    }
+  }
+
+  function drawAntioxidant(animate) {
+    drawEnzyme('chart-catalase', 'Catalase', [
+      {name:'億菌大師DSM35067',value:8000},
+      {name:'它牌凝結S',value:3500},
+      {name:'它牌凝結B',value:14000},
+      {name:'億菌大師DSM35068',value:9500},
+      {name:'它牌納豆H',value:7000},
+      {name:'它牌納豆S',value:7000}
+    ], 16000, animate);
+
+    drawEnzyme('chart-sod', 'SOD', [
+      {name:'億菌大師DSM35067',value:800},
+      {name:'它牌凝結S',value:200},
+      {name:'它牌凝結B',value:350},
+      {name:'億菌大師DSM35068',value:650},
+      {name:'它牌納豆H',value:550},
+      {name:'它牌納豆S',value:550}
+    ], 900, animate);
+  }
+
+  /* ==========================================================================
+     Section 4 — Clinical Bristol stacked bar chart
+     ========================================================================== */
+  const bristolDB = {
+    whey: {
+      control: [{day:'Baseline',c:20,d:20,h:60},{day:'1st',c:20,d:20,h:60},{day:'2nd',c:15,d:20,h:65},{day:'3rd',c:15,d:15,h:70},{day:'4th',c:15,d:15,h:70},{day:'5th',c:15,d:15,h:70}],
+      bc: [{day:'Baseline',c:25,d:15,h:60},{day:'1st',c:15,d:15,h:70},{day:'2nd',c:10,d:10,h:80},{day:'3rd',c:8,d:7,h:85},{day:'4th',c:7,d:5,h:88},{day:'5th',c:7,d:5,h:88}],
+      bs: [{day:'Baseline',c:25,d:15,h:60},{day:'1st',c:15,d:12,h:73},{day:'2nd',c:10,d:10,h:80},{day:'3rd',c:8,d:7,h:85},{day:'4th',c:7,d:5,h:88},{day:'5th',c:7,d:5,h:88}]
+    },
+    pea: {
+      control: [{day:'Baseline',c:20,d:25,h:55},{day:'1st',c:20,d:25,h:55},{day:'2nd',c:20,d:20,h:60},{day:'3rd',c:18,d:20,h:62},{day:'4th',c:18,d:20,h:62},{day:'5th',c:18,d:20,h:62}],
+      bc: [{day:'Baseline',c:25,d:20,h:55},{day:'1st',c:15,d:15,h:70},{day:'2nd',c:10,d:10,h:80},{day:'3rd',c:10,d:5,h:85},{day:'4th',c:10,d:2,h:88},{day:'5th',c:10,d:2,h:88}],
+      bs: [{day:'Baseline',c:25,d:20,h:55},{day:'1st',c:15,d:12,h:73},{day:'2nd',c:10,d:8,h:82},{day:'3rd',c:10,d:5,h:85},{day:'4th',c:10,d:2,h:88},{day:'5th',c:10,d:2,h:88}]
+    },
+    col: {
+      control: [{day:'Baseline',c:15,d:20,h:65},{day:'1st',c:15,d:20,h:65},{day:'2nd',c:15,d:18,h:67},{day:'3rd',c:12,d:18,h:70},{day:'4th',c:12,d:18,h:70},{day:'5th',c:12,d:18,h:70}],
+      bc: [{day:'Baseline',c:15,d:20,h:65},{day:'1st',c:12,d:15,h:73},{day:'2nd',c:10,d:10,h:80},{day:'3rd',c:10,d:5,h:85},{day:'4th',c:10,d:2,h:88},{day:'5th',c:10,d:2,h:88}],
+      bs: [{day:'Baseline',c:15,d:20,h:65},{day:'1st',c:12,d:15,h:73},{day:'2nd',c:10,d:10,h:80},{day:'3rd',c:10,d:5,h:85},{day:'4th',c:10,d:2,h:88},{day:'5th',c:10,d:2,h:88}]
+    }
+  };
+
+  const proteinLabels = { whey: '乳清蛋白', pea: '碗豆蛋白', col: '膠原蛋白' };
+  const condLabels = { control: '對照組', bc: '凝結芽孢桿菌', bs: '納豆芽孢桿菌' };
+
+  const insightDB = {
+    whey: {
+      control: '乳清蛋白對照組排便型態無明顯改善，便秘與腹瀉比例維持在15%左右。',
+      bc: '添加凝結芽孢桿菌後，乳清蛋白組健康排便比例從60%提升至88%，便秘與腹瀉顯著下降。',
+      bs: '添加納豆芽孢桿菌後，乳清蛋白組同樣達到88%健康排便率，效果與BC相當。'
+    },
+    pea: {
+      control: '碗豆蛋白對照組腹瀉比例較高(20%)，5天後僅小幅改善至62%健康排便。',
+      bc: '添加凝結芽孢桿菌後，碗豆蛋白組健康排便從55%躍升至88%，腹瀉從20%降至2%。',
+      bs: '添加納豆芽孢桿菌後，碗豆蛋白組表現與BC相當，健康排便達88%。'
+    },
+    col: {
+      control: '膠原蛋白對照組排便改善有限，5天後健康排便僅從65%升至70%。',
+      bc: '添加凝結芽孢桿菌後，膠原蛋白組健康排便從65%提升至88%，效果顯著。',
+      bs: '添加納豆芽孢桿菌後，膠原蛋白組同樣達到88%健康排便率。'
+    }
+  };
+
+  function drawBristol(animate) {
+    const protein = document.getElementById('sel-protein').value;
+    const cond = document.getElementById('sel-condition').value;
+    const data = bristolDB[protein][cond];
+
+    const container = d3.select('#chart-bristol');
+    container.selectAll('svg').remove();
+
+    const keys = ['c', 'd', 'h'];
+    const colors = { c: '#ff9800', d: '#6b5ce7', h: '#4caf50' };
+    const labels = { c: '便秘', d: '腹瀉', h: '健康' };
+
+    const stacked = d3.stack().keys(keys)(data);
+
+    const d = dims(container, 0.5);
+    const mg = { top: 30, right: 20, bottom: 50, left: 60 };
+    const svg = container.append('svg').attr('viewBox', `0 0 ${d.w} ${d.h}`);
+    const g = svg.append('g').attr('transform', `translate(${mg.left},${mg.top})`);
+    const iw = d.w - mg.left - mg.right, ih = d.h - mg.top - mg.bottom;
+
+    const x = d3.scaleBand().domain(data.map(d => d.day)).range([0, iw]).padding(0.3);
+    const y = d3.scaleLinear().domain([0, 100]).range([ih, 0]);
+
+    g.append('g').attr('transform', `translate(0,${ih})`).call(d3.axisBottom(x).tickSize(0))
+      .selectAll('text').attr('fill', '#ccccdd').style('font-size', '12px');
+    g.append('g').call(d3.axisLeft(y).ticks(5).tickFormat(d => d + '%'))
+      .selectAll('text').attr('fill', '#ccccdd');
+    g.selectAll('.domain, .tick line').attr('stroke', '#555');
+
+    // Title
+    svg.append('text')
+      .attr('x', d.w / 2).attr('y', 18).attr('text-anchor', 'middle')
+      .attr('fill', '#d4a843').style('font-size', '14px').style('font-weight', '600')
+      .text(`Bristol 排便型態 — ${proteinLabels[protein]} × ${condLabels[cond]}`);
+
+    stacked.forEach(layer => {
+      const rects = g.selectAll(`.bar-${layer.key}`).data(layer).enter().append('rect')
+        .attr('x', d => x(d.data.day)).attr('width', x.bandwidth())
+        .attr('fill', colors[layer.key]).attr('rx', 2)
+        .on('mouseover', (e, d) => showTip(e, `${labels[layer.key]}: ${d.data[layer.key]}%`))
+        .on('mouseout', hideTip);
+
+      if (animate) {
+        rects.attr('y', ih).attr('height', 0)
+          .transition().duration(600).delay((d, i) => i * 60)
+          .attr('y', d => y(d[1])).attr('height', d => y(d[0]) - y(d[1]));
+      } else {
+        rects.attr('y', d => y(d[1])).attr('height', d => y(d[0]) - y(d[1]));
+      }
+    });
+
+    // Legend
+    const leg = g.append('g').attr('transform', `translate(${iw - 180}, -10)`);
+    [{k:'h',l:'健康'},{k:'d',l:'腹瀉'},{k:'c',l:'便秘'}].forEach((it,i) => {
+      leg.append('rect').attr('x',0).attr('y',i*20).attr('width',14).attr('height',14).attr('rx',3).attr('fill',colors[it.k]);
+      leg.append('text').attr('x',20).attr('y',i*20+12).text(it.l).attr('fill','#ccccdd').style('font-size','12px');
+    });
+
+    // Insight text
+    d3.select('#insight-tn').html(insightDB[protein][cond]);
+  }
+
+  /* ==========================================================================
+     Dropdown listeners
+     ========================================================================== */
+  document.getElementById('sel-protein').addEventListener('change', () => drawBristol(true));
+  document.getElementById('sel-condition').addEventListener('change', () => drawBristol(true));
+
+  /* ==========================================================================
+     IntersectionObserver — scroll-triggered animations
+     ========================================================================== */
+  const drawn = new Set();
+
+  const chartMap = {
+    'sec-market': () => drawSurvey(true),
+    'station1': () => drawAcidBile(true),
+    'station2': () => drawColon(true),
+    'station3': () => drawImmune(true),
+    'station4': () => drawGLP1(true),
+    'station5': () => drawDopamine(true),
+    'station6': () => drawAntioxidant(true),
+    'sec-clinical': () => drawBristol(true)
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Fade-in class
+        const animEl = entry.target.classList.contains('anim-target')
+          ? entry.target
+          : entry.target.querySelector('.anim-target');
+        if (animEl) animEl.classList.add('visible');
+        entry.target.classList.add('visible');
+
+        // Draw chart if not yet drawn
+        const id = entry.target.id;
+        if (chartMap[id] && !drawn.has(id)) {
+          drawn.add(id);
+          chartMap[id]();
+        }
+      }
+    });
+  }, { threshold: 0.2 });
+
+  // Observe all sections and stations
+  document.querySelectorAll('section, .station').forEach(el => {
+    if (el.id) observer.observe(el);
+  });
+
+  // Also observe .anim-target elements for fade-in
+  document.querySelectorAll('.anim-target').forEach(el => observer.observe(el));
+
+  /* ==========================================================================
+     Redraw on resize
+     ========================================================================== */
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      drawn.forEach(id => {
+        const fn = chartMap[id];
+        if (fn) {
+          // Redraw without animation
+          const origFn = {
+            'sec-market': () => drawSurvey(false),
+            'station1': () => drawAcidBile(false),
+            'station2': () => drawColon(false),
+            'station3': () => drawImmune(false),
+            'station4': () => drawGLP1(false),
+            'station5': () => drawDopamine(false),
+            'station6': () => drawAntioxidant(false),
+            'sec-clinical': () => drawBristol(false)
+          };
+          if (origFn[id]) origFn[id]();
+        }
+      });
+    }, 250);
+  });
+
+})();
+</script>
+</body>
+</html>
