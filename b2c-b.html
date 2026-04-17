@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MASTERBiotics™ 日本億菌大師 — B2C Dashboard</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:-apple-system,'Microsoft JhengHei','PingFang TC',system-ui,sans-serif;
+    background:linear-gradient(135deg,#1a1a3e 0%,#2d1b69 100%);
+    color:#ffffff;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  /* ── Hero Banner ── */
+  .hero{
+    height:40vh;
+    min-height:340px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background:linear-gradient(160deg,#1a1a3e 0%,#2d1b69 40%,#3a2080 70%,#1a1a3e 100%);
+    position:relative;
+    overflow:hidden;
+    padding:20px;
+  }
+  .hero::before{
+    content:'';
+    position:absolute;
+    width:600px;height:600px;
+    background:radial-gradient(circle,rgba(212,168,67,0.12) 0%,transparent 70%);
+    top:-200px;left:50%;transform:translateX(-50%);
+    pointer-events:none;
+  }
+  .hero-title{
+    font-size:clamp(2rem,5vw,3.2rem);
+    font-weight:800;
+    letter-spacing:4px;
+    color:#d4a843;
+    text-shadow:0 0 30px rgba(212,168,67,0.4);
+  }
+  .hero-subtitle{
+    font-size:clamp(1rem,2.5vw,1.4rem);
+    color:#ccccdd;
+    margin-top:6px;
+    letter-spacing:6px;
+  }
+  .hero-counters{
+    display:flex;
+    gap:clamp(20px,6vw,60px);
+    margin-top:30px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .counter-box{
+    text-align:center;
+  }
+  .counter-value{
+    font-size:clamp(2.2rem,5vw,3.6rem);
+    font-weight:900;
+    color:#d4a843;
+    line-height:1.1;
+  }
+  .counter-unit{
+    font-size:clamp(1rem,2vw,1.3rem);
+    color:#d4a843;
+  }
+  .counter-label{
+    font-size:clamp(0.75rem,1.5vw,1rem);
+    color:#ccccdd;
+    margin-top:4px;
+    letter-spacing:2px;
+  }
+
+  /* ── Dashboard Grid ── */
+  .dashboard{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:24px;
+    padding:40px;
+    max-width:1400px;
+    margin:0 auto;
+  }
+  @media(max-width:900px){
+    .dashboard{grid-template-columns:1fr;padding:20px;}
+  }
+  .panel{
+    background:rgba(45,27,105,0.6);
+    border-radius:16px;
+    padding:30px;
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.06);
+  }
+  .panel-title{
+    font-size:1.3rem;
+    font-weight:700;
+    color:#d4a843;
+    margin-bottom:20px;
+    text-align:center;
+    letter-spacing:2px;
+  }
+
+  /* ── Panel 1: Flip Cards ── */
+  .flip-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+    gap:14px;
+  }
+  .flip-card{
+    perspective:800px;
+    height:170px;
+    cursor:pointer;
+  }
+  .flip-card-inner{
+    position:relative;
+    width:100%;height:100%;
+    transition:transform 0.6s ease;
+    transform-style:preserve-3d;
+  }
+  .flip-card:hover .flip-card-inner,
+  .flip-card.flipped .flip-card-inner{
+    transform:rotateY(180deg);
+  }
+  .flip-front,.flip-back{
+    position:absolute;
+    width:100%;height:100%;
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+    border-radius:12px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:12px;
+    text-align:center;
+    background:rgba(107,92,231,0.25);
+    border:1px solid rgba(212,168,67,0.15);
+  }
+  .flip-front .flip-icon{font-size:2.2rem;margin-bottom:8px;}
+  .flip-front .flip-name{font-size:0.95rem;font-weight:600;color:#ffffff;}
+  .flip-back{
+    transform:rotateY(180deg);
+    background:rgba(212,168,67,0.15);
+    font-size:0.78rem;
+    line-height:1.5;
+    color:#ccccdd;
+  }
+
+  /* ── Panel 2: Clinical Data ── */
+  .dropdown-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+  }
+  .dropdown-row label{font-size:0.9rem;color:#ccccdd;}
+  .dropdown-row select{
+    padding:6px 12px;
+    border-radius:8px;
+    border:1px solid rgba(212,168,67,0.4);
+    background:#1a1a3e;
+    color:#ffffff;
+    font-size:0.9rem;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .chart-container{width:100%;min-height:260px;}
+  .chart-container svg{width:100%;overflow:visible;}
+  .insight{
+    text-align:center;
+    margin-top:14px;
+    font-size:1.05rem;
+    font-weight:700;
+    color:#4caf50;
+    letter-spacing:1px;
+  }
+
+  /* ── Panel 3: Toggle Buttons ── */
+  .toggle-row{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+  }
+  .toggle-btn{
+    padding:8px 18px;
+    border-radius:24px;
+    border:1px solid rgba(212,168,67,0.4);
+    background:transparent;
+    color:#ccccdd;
+    font-size:0.85rem;
+    cursor:pointer;
+    transition:all 0.3s;
+    font-family:inherit;
+  }
+  .toggle-btn.active{
+    background:#d4a843;
+    color:#1a1a3e;
+    font-weight:700;
+    border-color:#d4a843;
+  }
+
+  /* ── Panel 4: Product Forms ── */
+  .product-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(100px,1fr));
+    gap:16px;
+  }
+  .product-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:18px 8px;
+    border-radius:12px;
+    background:rgba(107,92,231,0.18);
+    border:1px solid rgba(212,168,67,0.1);
+    transition:transform 0.3s,box-shadow 0.3s;
+    cursor:default;
+  }
+  .product-item:hover{
+    transform:scale(1.12);
+    box-shadow:0 0 24px rgba(212,168,67,0.35);
+  }
+  .product-icon{font-size:2rem;margin-bottom:8px;}
+  .product-name{font-size:0.85rem;color:#ffffff;text-align:center;}
+
+  /* ── Chart axis / tick styling ── */
+  .axis text{fill:#ccccdd;font-size:11px;}
+  .axis path,.axis line{stroke:#555;}
+  .legend-label{fill:#ccccdd;font-size:11px;}
+
+  /* ── Mobile touch support for flip cards ── */
+  @media(hover:none){
+    .flip-card:active .flip-card-inner{transform:rotateY(180deg);}
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════ Hero Banner ════════════ -->
+<section class="hero">
+  <h1 class="hero-title">MASTERBiotics&trade;</h1>
+  <p class="hero-subtitle">日本億菌大師</p>
+  <div class="hero-counters">
+    <div class="counter-box">
+      <div><span class="counter-value" id="counter1">0</span><span class="counter-unit">億</span></div>
+      <div class="counter-label">凝結芽孢桿菌</div>
+    </div>
+    <div class="counter-box">
+      <div><span class="counter-value" id="counter2">0</span><span class="counter-unit">億</span></div>
+      <div class="counter-label">納豆芽孢桿菌</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ Dashboard Grid ════════════ -->
+<main class="dashboard">
+
+  <!-- Panel 1 — 五大健康功效 -->
+  <div class="panel">
+    <h2 class="panel-title">五大健康功效</h2>
+    <div class="flip-grid" id="flipGrid"></div>
+  </div>
+
+  <!-- Panel 2 — 臨床數據 -->
+  <div class="panel">
+    <h2 class="panel-title">臨床數據</h2>
+    <p style="text-align:center;color:#ccccdd;margin-bottom:10px;font-size:0.95rem;">蛋白質吸收率提升</p>
+    <div class="dropdown-row">
+      <label for="proteinSelect">蛋白質類型：</label>
+      <select id="proteinSelect">
+        <option value="whey">乳清蛋白</option>
+        <option value="pea">碗豆蛋白</option>
+        <option value="collagen">膠原蛋白</option>
+      </select>
+    </div>
+    <div class="chart-container" id="tnFanChart"></div>
+    <div class="insight">吸收率提升 200%+</div>
+  </div>
+
+  <!-- Panel 3 — 排便改善 -->
+  <div class="panel">
+    <h2 class="panel-title">排便健康改善</h2>
+    <div class="toggle-row">
+      <button class="toggle-btn active" data-strain="bCoagulans">凝結芽孢桿菌</button>
+      <button class="toggle-btn" data-strain="bSubtilis">納豆芽孢桿菌</button>
+    </div>
+    <div class="chart-container" id="bristolChart"></div>
+    <div class="insight">便秘改善70%，腹瀉改善10%</div>
+  </div>
+
+  <!-- Panel 4 — 產品形式 -->
+  <div class="panel">
+    <h2 class="panel-title">產品形式</h2>
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+
+</main>
+
+<script>
+/* ═══════════════════════════════════════
+   Hero Counter Animation
+   ═══════════════════════════════════════ */
+(function animateCounters(){
+  const targets=[{el:document.getElementById('counter1'),end:500,duration:2000},
+                 {el:document.getElementById('counter2'),end:2000,duration:2400}];
+  let start=null;
+  function step(ts){
+    if(!start) start=ts;
+    const elapsed=ts-start;
+    let allDone=true;
+    targets.forEach(t=>{
+      const progress=Math.min(elapsed/t.duration,1);
+      const ease=1-Math.pow(1-progress,3);
+      const val=Math.round(ease*t.end);
+      t.el.textContent=val;
+      if(progress<1) allDone=false;
+    });
+    if(!allDone) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+})();
+
+/* ═══════════════════════════════════════
+   Panel 1 — Flip Cards
+   ═══════════════════════════════════════ */
+(function buildFlipCards(){
+  const benefits=[
+    {icon:'🦠',name:'腸道健康',desc:'耐胃酸膽鹽考驗，腸道定殖力強，經3小時胃酸及膽鹽處理後菌數無明顯下降'},
+    {icon:'🛡️',name:'免疫優化',desc:'抗病毒、抗過敏、抗發炎三重免疫功效，IFN-γ/IL-4比值優於傳統益生菌'},
+    {icon:'⚖️',name:'體重管理',desc:'激活瘦瘦素GLP-1，幫助控制食慾、提升胰島素分泌、減緩胃酸排空'},
+    {icon:'😊',name:'好心情',desc:'透過腦腸軸促進多巴胺分泌，幫助睡眠維持好心情'},
+    {icon:'✨',name:'抗氧化',desc:'長效型抗氧化，激活SOD和Catalase兩大關鍵酵素，清除自由基'}
+  ];
+  const grid=document.getElementById('flipGrid');
+  benefits.forEach(b=>{
+    const card=document.createElement('div');
+    card.className='flip-card';
+    card.innerHTML=`
+      <div class="flip-card-inner">
+        <div class="flip-front">
+          <div class="flip-icon">${b.icon}</div>
+          <div class="flip-name">${b.name}</div>
+        </div>
+        <div class="flip-back">${b.desc}</div>
+      </div>`;
+    /* Touch support: toggle flip on tap */
+    card.addEventListener('click',function(){this.classList.toggle('flipped');});
+    grid.appendChild(card);
+  });
+})();
+
+/* ═══════════════════════════════════════
+   Panel 2 — TN / FAN Grouped Bar Chart
+   ═══════════════════════════════════════ */
+const tnFanData={
+  whey:{
+    control:{tn:10.23,fan:0.65},
+    bCoagulans:{tn:5.98,fan:1.20},
+    bSubtilis:{tn:5.91,fan:1.28}
+  },
+  pea:{
+    control:{tn:11.01,fan:0.59},
+    bCoagulans:{tn:6.19,fan:1.22},
+    bSubtilis:{tn:6.24,fan:1.38}
+  },
+  collagen:{
+    control:{tn:7.45,fan:0.80},
+    bCoagulans:{tn:5.90,fan:1.32},
+    bSubtilis:{tn:5.93,fan:1.34}
+  }
+};
+
+const groupLabels=['無益生菌','凝結芽孢桿菌','納豆芽孢桿菌'];
+const groupKeys=['control','bCoagulans','bSubtilis'];
+
+function drawTnFanChart(protein){
+  const container=document.getElementById('tnFanChart');
+  container.innerHTML='';
+  const rect=container.getBoundingClientRect();
+  const margin={top:20,right:20,bottom:50,left:45};
+  const width=Math.max(rect.width,280)-margin.left-margin.right;
+  const height=240-margin.top-margin.bottom;
+
+  const svg=d3.select(container).append('svg')
+    .attr('viewBox',`0 0 ${width+margin.left+margin.right} ${height+margin.top+margin.bottom}`)
+    .append('g').attr('transform',`translate(${margin.left},${margin.top})`);
+
+  const data=tnFanData[protein];
+  const groups=groupKeys.map((k,i)=>({label:groupLabels[i],tn:data[k].tn,fan:data[k].fan}));
+
+  const x0=d3.scaleBand().domain(groupLabels).range([0,width]).padding(0.3);
+  const x1=d3.scaleBand().domain(['TN','FAN']).range([0,x0.bandwidth()]).padding(0.08);
+  const yMax=d3.max(groups,d=>Math.max(d.tn,d.fan))*1.15;
+  const y=d3.scaleLinear().domain([0,yMax]).nice().range([height,0]);
+
+  svg.append('g').attr('class','axis').attr('transform',`translate(0,${height})`).call(d3.axisBottom(x0).tickSize(0))
+    .selectAll('text').style('text-anchor','middle').attr('dy','0.9em').style('font-size','10px');
+  svg.append('g').attr('class','axis').call(d3.axisLeft(y).ticks(5));
+
+  const barGroups=svg.selectAll('.bar-group').data(groups).join('g')
+    .attr('transform',d=>`translate(${x0(d.label)},0)`);
+
+  /* TN bars */
+  barGroups.append('rect')
+    .attr('x',x1('TN')).attr('width',x1.bandwidth())
+    .attr('y',height).attr('height',0)
+    .attr('fill','#d4a843').attr('rx',3)
+    .transition().duration(800).ease(d3.easeCubicOut)
+    .attr('y',d=>y(d.tn)).attr('height',d=>height-y(d.tn));
+
+  /* FAN bars */
+  barGroups.append('rect')
+    .attr('x',x1('FAN')).attr('width',x1.bandwidth())
+    .attr('y',height).attr('height',0)
+    .attr('fill','#4caf50').attr('rx',3)
+    .transition().duration(800).ease(d3.easeCubicOut)
+    .attr('y',d=>y(d.fan)).attr('height',d=>height-y(d.fan));
+
+  /* Value labels TN */
+  barGroups.append('text')
+    .attr('x',x1('TN')+x1.bandwidth()/2)
+    .attr('y',d=>y(d.tn)-4)
+    .attr('text-anchor','middle')
+    .attr('fill','#d4a843').attr('font-size','10px')
+    .text(d=>d.tn);
+
+  /* Value labels FAN */
+  barGroups.append('text')
+    .attr('x',x1('FAN')+x1.bandwidth()/2)
+    .attr('y',d=>y(d.fan)-4)
+    .attr('text-anchor','middle')
+    .attr('fill','#4caf50').attr('font-size','10px')
+    .text(d=>d.fan);
+
+  /* Legend */
+  const legend=svg.append('g').attr('transform',`translate(${width-120},-8)`);
+  [{label:'TN',color:'#d4a843'},{label:'FAN',color:'#4caf50'}].forEach((l,i)=>{
+    const g=legend.append('g').attr('transform',`translate(${i*60},0)`);
+    g.append('rect').attr('width',12).attr('height',12).attr('rx',2).attr('fill',l.color);
+    g.append('text').attr('x',16).attr('y',10).attr('class','legend-label').text(l.label);
+  });
+}
+
+document.getElementById('proteinSelect').addEventListener('change',function(){
+  drawTnFanChart(this.value);
+});
+
+/* Initial render */
+drawTnFanChart('whey');
+
+/* ═══════════════════════════════════════
+   Panel 3 — Bristol Stacked Bar Chart
+   ═══════════════════════════════════════ */
+const bristolData={
+  bCoagulans:[
+    {day:'Baseline',constipation:25,diarrhea:15,healthy:60},
+    {day:'1st Day',constipation:15,diarrhea:15,healthy:70},
+    {day:'2nd Day',constipation:10,diarrhea:10,healthy:80},
+    {day:'3rd Day',constipation:8,diarrhea:7,healthy:85},
+    {day:'4th Day',constipation:7,diarrhea:5,healthy:88},
+    {day:'5th Day',constipation:7,diarrhea:5,healthy:88}
+  ],
+  bSubtilis:[
+    {day:'Baseline',constipation:25,diarrhea:15,healthy:60},
+    {day:'1st Day',constipation:15,diarrhea:12,healthy:73},
+    {day:'2nd Day',constipation:10,diarrhea:10,healthy:80},
+    {day:'3rd Day',constipation:8,diarrhea:7,healthy:85},
+    {day:'4th Day',constipation:7,diarrhea:5,healthy:88},
+    {day:'5th Day',constipation:7,diarrhea:5,healthy:88}
+  ]
+};
+
+const stackKeys=['constipation','diarrhea','healthy'];
+const stackColors={constipation:'#ff9800',diarrhea:'#4caf50',healthy:'#3a86c8'};
+const stackLabelsMap={constipation:'便秘',diarrhea:'腹瀉',healthy:'健康'};
+
+function drawBristolChart(strain){
+  const container=document.getElementById('bristolChart');
+  container.innerHTML='';
+  const rect=container.getBoundingClientRect();
+  const margin={top:20,right:20,bottom:50,left:45};
+  const width=Math.max(rect.width,280)-margin.left-margin.right;
+  const height=240-margin.top-margin.bottom;
+
+  const svg=d3.select(container).append('svg')
+    .attr('viewBox',`0 0 ${width+margin.left+margin.right} ${height+margin.top+margin.bottom}`)
+    .append('g').attr('transform',`translate(${margin.left},${margin.top})`);
+
+  const data=bristolData[strain];
+  const stack=d3.stack().keys(stackKeys)(data);
+
+  const x=d3.scaleBand().domain(data.map(d=>d.day)).range([0,width]).padding(0.25);
+  const y=d3.scaleLinear().domain([0,100]).range([height,0]);
+
+  svg.append('g').attr('class','axis').attr('transform',`translate(0,${height})`)
+    .call(d3.axisBottom(x).tickSize(0))
+    .selectAll('text').style('text-anchor','end').attr('dx','-0.4em').attr('dy','0.6em').attr('transform','rotate(-25)').style('font-size','10px');
+  svg.append('g').attr('class','axis').call(d3.axisLeft(y).ticks(5).tickFormat(d=>d+'%'));
+
+  const layers=svg.selectAll('.layer').data(stack).join('g')
+    .attr('fill',d=>stackColors[d.key]);
+
+  layers.selectAll('rect').data(d=>d).join('rect')
+    .attr('x',d=>x(d.data.day))
+    .attr('width',x.bandwidth())
+    .attr('rx',2)
+    .attr('y',height).attr('height',0)
+    .transition().duration(800).ease(d3.easeCubicOut)
+    .attr('y',d=>y(d[1]))
+    .attr('height',d=>y(d[0])-y(d[1]));
+
+  /* Legend */
+  const legend=svg.append('g').attr('transform',`translate(${width-200},-8)`);
+  stackKeys.forEach((k,i)=>{
+    const g=legend.append('g').attr('transform',`translate(${i*70},0)`);
+    g.append('rect').attr('width',12).attr('height',12).attr('rx',2).attr('fill',stackColors[k]);
+    g.append('text').attr('x',16).attr('y',10).attr('class','legend-label').text(stackLabelsMap[k]);
+  });
+}
+
+/* Toggle button logic */
+document.querySelectorAll('.toggle-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    drawBristolChart(this.dataset.strain);
+  });
+});
+
+/* Initial render */
+drawBristolChart('bCoagulans');
+
+/* ═══════════════════════════════════════
+   Panel 4 — Product Forms
+   ═══════════════════════════════════════ */
+(function buildProductGrid(){
+  const products=[
+    {icon:'🥤',name:'粉劑飲品'},
+    {icon:'📦',name:'口服粉包'},
+    {icon:'💊',name:'膠囊'},
+    {icon:'💎',name:'錠劑'},
+    {icon:'🍬',name:'軟糖/果凍'}
+  ];
+  const grid=document.getElementById('productGrid');
+  products.forEach(p=>{
+    const item=document.createElement('div');
+    item.className='product-item';
+    item.innerHTML=`<div class="product-icon">${p.icon}</div><div class="product-name">${p.name}</div>`;
+    grid.appendChild(item);
+  });
+})();
+
+/* ═══════════════════════════════════════
+   Resize handler — redraw charts
+   ═══════════════════════════════════════ */
+let resizeTimer;
+window.addEventListener('resize',function(){
+  clearTimeout(resizeTimer);
+  resizeTimer=setTimeout(function(){
+    drawTnFanChart(document.getElementById('proteinSelect').value);
+    const activeStrain=document.querySelector('.toggle-btn.active').dataset.strain;
+    drawBristolChart(activeStrain);
+  },250);
+});
+</script>
+</body>
+</html>
